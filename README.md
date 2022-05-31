@@ -1,8 +1,8 @@
 # prgrs
 
-A simple script to show progress bars in POSIX.
+A simple progress bar in POSIX.
 
-## Examples
+## Usage examples
 
 ```
 $ ./example.sh | ./prgrs
