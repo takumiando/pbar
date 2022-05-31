@@ -113,5 +113,5 @@ do
 
     printf "\r\033[2A"
     printf "%s%s\033[K\n" "$TITLE" "$MESSAGE"
-    printf "  %s%s %3d%%\n" "$(pcolor "$COLOR" "$BAR")" "$BLANK" "$PROGRESS"
+    printf "%s%s %3d%%\n" "$(pcolor "$COLOR" "$BAR")" "$BLANK" "$PROGRESS"
 done
