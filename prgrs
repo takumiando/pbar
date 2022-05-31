@@ -1,0 +1,60 @@
+#!/bin/sh
+
+TITLE=""
+COMMENT=""
+CHAR="█"
+TOP=""
+PROGRESS=0
+
+usage () {
+    cat << EOF
+Usage: COMMAND | ${0##*/} [-c CHAR] [-C TOPCHAR] [-t TITLE]...
+EOF
+}
+
+if [ ! -p "/dev/stdin" ]; then
+    usage
+    exit 1
+fi
+
+while [ $# -gt 0 ]
+do
+    ARG="$1"
+    shift
+    case "$ARG" in
+        -c)
+            CHAR="$1"
+            shift
+            ;;
+        -C)
+            TOP="$1"
+            shift
+            ;;
+        -t)
+            TITLE="$1: "
+            shift
+            ;;
+        *)
+            ;;
+    esac
+done
+
+printf "\n\n"
+
+while read -r LINE
+do
+    if printf "%s" "$LINE" | grep -qE '^[0-9]+$' > /dev/null 2>&1; then
+        PROGRESS="$LINE"
+    elif printf "%s" "$LINE" | grep '^#' > /dev/null 2>&1; then
+        COMMENT=$(printf "%s\n" "$LINE" | sed 's/^#//')
+    fi
+
+    BAR=$(yes "$CHAR" | head -n "$(( PROGRESS / 2 ))" | tr -d '\n')
+    if [ -n "$TOP" ] && [ "$PROGRESS" -lt 100 ]; then
+        BAR=$(printf "%s" "$BAR" | sed s/"$CHAR"$/"$TOP"/)
+    fi
+
+    printf "\r\033[2A"
+    printf "%s%s\033[K\n" "$TITLE" "$COMMENT"
+    printf "%3d%% %s\n" "$PROGRESS" "$BAR"
+done
