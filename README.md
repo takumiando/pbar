@@ -11,7 +11,7 @@ Downloading dependencies...
 ```
 
 ```
-$ ./example.sh | ./prgrs -t "Example script" -c '=' -C '>'
+$ ./example.sh | ./prgrs -t "Example script" -b '=' -p '>' -l 100
 Example script: Downloading dependencies...
- 40% ===================>
+ 40% =======================================>
 ```

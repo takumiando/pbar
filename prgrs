@@ -3,12 +3,13 @@
 TITLE=""
 COMMENT=""
 CHAR="█"
-TOP=""
+PROMPT=""
 PROGRESS=0
+LENGTH=50
 
 usage () {
     cat << EOF
-Usage: COMMAND | ${0##*/} [-c CHAR] [-C TOPCHAR] [-t TITLE]...
+Usage: COMMAND | ${0##*/} [-b BAR] [-p PROMPT] [-t TITLE] [-l LENGTH]...
 EOF
 }
 
@@ -22,16 +23,24 @@ do
     ARG="$1"
     shift
     case "$ARG" in
-        -c)
+        -b)
             CHAR="$1"
             shift
             ;;
-        -C)
-            TOP="$1"
+        -p)
+            PROMPT="$1"
             shift
             ;;
         -t)
             TITLE="$1: "
+            shift
+            ;;
+        -l)
+            if printf "$1" | grep -qE '^[0-9]+$' > /dev/null 2>&1; then
+                if [ "$1" -ge 10 ] && [ "$1" -le 100 ]; then
+                    LENGTH="$1"
+                fi
+            fi
             shift
             ;;
         *)
@@ -49,9 +58,9 @@ do
         COMMENT=$(printf "%s\n" "$LINE" | sed 's/^#//')
     fi
 
-    BAR=$(yes "$CHAR" | head -n "$(( PROGRESS / 2 ))" 2> /dev/null | tr -d '\n')
-    if [ -n "$TOP" ] && [ "$PROGRESS" -lt 100 ]; then
-        BAR=$(printf "%s" "$BAR" | sed s/"$CHAR"$/"$TOP"/)
+    BAR=$(yes "$CHAR" | head -n "$(( PROGRESS / ( 100 / LENGTH )  ))" 2> /dev/null | tr -d '\n')
+    if [ -n "$PROMPT" ] && [ "$PROGRESS" -lt 100 ]; then
+        BAR=$(printf "%s" "$BAR" | sed s/"$CHAR"$/"$PROMPT"/)
     fi
 
     printf "\r\033[2A"
