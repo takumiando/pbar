@@ -6,12 +6,12 @@ A simple script to show progress bars in POSIX.
 
 ```
 $ ./example.sh | ./prgrs
-Downloading dependencies...
- 40% ████████████████████
+Installing dependencies...
+  █████████████████████████                           50%
 ```
 
 ```
 $ ./example.sh | ./prgrs -t "Example script" -b '=' -p '>' -l 100
-Example script: Downloading dependencies...
- 40% =======================================>
+Example script: Installing dependencies...
+  =================================================>                                                    50%
 ```
