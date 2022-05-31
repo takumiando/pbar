@@ -49,7 +49,7 @@ do
         COMMENT=$(printf "%s\n" "$LINE" | sed 's/^#//')
     fi
 
-    BAR=$(yes "$CHAR" | head -n "$(( PROGRESS / 2 ))" | tr -d '\n')
+    BAR=$(yes "$CHAR" | head -n "$(( PROGRESS / 2 ))" 2> /dev/null | tr -d '\n')
     if [ -n "$TOP" ] && [ "$PROGRESS" -lt 100 ]; then
         BAR=$(printf "%s" "$BAR" | sed s/"$CHAR"$/"$TOP"/)
     fi
