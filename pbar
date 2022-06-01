@@ -5,12 +5,11 @@ MESSAGE=""
 CHAR="█"
 PROMPT=""
 PROGRESS=0
-LENGTH=50
 COLOR=""
 
 usage () {
     cat << EOF
-Usage: COMMAND | ${0##*/} [-b BAR] [-p PROMPT] [-t TITLE] [-l LENGTH] [-c COLOR]...
+Usage: COMMAND | ${0##*/} [-b BAR] [-p PROMPT] [-t TITLE] [-c COLOR]...
 EOF
 }
 
@@ -81,14 +80,6 @@ do
             TITLE="$1: "
             shift
             ;;
-        -l)
-            if printf "%s" "$1" | grep -qE '^[0-9]+$' > /dev/null 2>&1; then
-                if [ "$1" -ge 10 ] && [ "$1" -le 100 ]; then
-                    LENGTH="$1"
-                fi
-            fi
-            shift
-            ;;
         *)
             ;;
     esac
@@ -98,14 +89,18 @@ printf "\n\n"
 
 while read -r LINE
 do
-    if printf "%s" "$LINE" | grep -qE '^[0-9]+$' > /dev/null 2>&1; then
+    if printf "%s" "$LINE" | grep -qE '^[0-9]+$'; then
         PROGRESS="$LINE"
-    elif printf "%s" "$LINE" | grep '^#' > /dev/null 2>&1; then
+    elif printf "%s" "$LINE" | grep -qE '^#'; then
         MESSAGE=$(printf "%s\n" "$LINE" | sed 's/^#//')
     fi
 
-    BAR=$(yes "$CHAR" | head -n "$(( PROGRESS / ( 100 / LENGTH )  ))" 2> /dev/null | tr -d '\n')
-    BLANK=$(yes " " | head -n "$(( LENGTH - PROGRESS / ( 100 / LENGTH )  ))" 2> /dev/null | tr -d '\n')
+    if [ "$PROGRESS" -gt 100 ]; then
+        PROGRESS=100
+    fi
+
+    BAR=$(yes "$CHAR" | head -n $(( PROGRESS / 2 )) 2> /dev/null | tr -d '\n')
+    BLANK=$(yes " " | head -n $(( 50 - PROGRESS / 2 )) 2> /dev/null | tr -d '\n')
 
     if [ -n "$PROMPT" ] && [ "$PROGRESS" -lt 100 ]; then
         BAR=$(printf "%s" "$BAR" | sed s/"$CHAR"$/"$PROMPT"/)

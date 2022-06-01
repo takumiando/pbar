@@ -11,7 +11,7 @@ Installing dependencies...
 ```
 
 ```
-$ ./example.sh | ./pbar -t "Example script" -b '=' -p '>' -l 20
+$ ./example.sh | ./pbar -t "Example script" -b '=' -p '>'
 Example script: Installing dependencies...
-=========>            50%
+========================>                           50%
 ```
